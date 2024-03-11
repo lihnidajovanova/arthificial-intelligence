@@ -116,6 +116,7 @@ def depth_limited_search(problem, limit=50):
 
     def recursive_dls(node, problem, limit):
         """Помошна функција за depth limited"""
+
         cutoff_occurred = False
         if problem.goal_test(node.state):
             return node

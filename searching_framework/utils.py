@@ -188,11 +188,10 @@ class Node:
 
 class Queue:
     """Queue е апстрактна класа / интерфејс. Постојат 3 типа:
-        Stack(): Last In First Out Queue (стек).
-        FIFOQueue(): First In First Out Queue (редица).
-        PriorityQueue(order, f): Queue во сортиран редослед (подразбирливо,од најмалиот кон
-                                 најголемиот јазол).
-    """
+    Stack(): Last In First Out Queue (стек).
+    FIFOQueue(): First In First Out Queue (редица).
+    PriorityQueue(order, f): Queue во сортиран редослед (подразбирливо,од најмалиот кон најголемиот јазол).
+    """
 
     def __init__(self):
         raise NotImplementedError
