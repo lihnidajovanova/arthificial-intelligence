@@ -653,7 +653,7 @@ Expected
 ['Pomesti kvadratche 1 gore', 'Pomesti kvadratche 1 gore', 'Pomesti kvadratche 2 dolu', 'Pomesti kvadratche 2 desno']
 ````
 
-## Задача 7 - solitare
+## Задача 7 - solitaire
 
 Предложете соодветна репрезентација и напишете ги потребните функции во Python за да се реши следниот проблем за кој
 една можна почетна состојба е прикажана на следната слика.
