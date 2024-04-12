@@ -188,13 +188,12 @@ class Node:
 
 
 class Queue:
-    """
-        Queue е апстрактна класа / интерфејс. Постојат 3 типа:
-        Stack(): Last In First Out Queue (стек).
-        FIFOQueue(): First In First Out Queue (редица).
-        PriorityQueue(order, f): Queue во сортиран редослед (подразбирливо,од најмалиот кон
+    """Queue е апстрактна класа / интерфејс. Постојат 3 типа:
+        Stack(): Last In First Out Queue (стек).
+        FIFOQueue(): First In First Out Queue (редица).
+        PriorityQueue(order, f): Queue во сортиран редослед (подразбирливо,од најмалиот кон
                                  најголемиот јазол).
-    """
+    """
 
     def __init__(self):
         raise NotImplementedError
@@ -472,11 +471,21 @@ def recursive_best_first_search(problem, h=None):
     return result
 
 
+def around_coords(coord):
+    x, y = coord
+    l1 = []
+    for i in range(-1, 2):
+        for j in range(-1, 2):
+            l1.append((x + i, y + j))
+    # print(f"Coord is {coord}")
+    # print(f"Around is {l1}")
+    return l1
+
+
 class Football(Problem):
-    def __init__(self, initial, opponents, goal=None):
-        super().__init__(initial, goal)
-        self.grid_size_x = 8
-        self.grid_size_y = 6
+    def __init__(self, initial, opponents):
+        super().__init__(initial, goal=None)
+        self.goal_coords = ((7, 2), (7, 3))
         self.opponents = opponents
 
     def actions(self, state):
@@ -486,113 +495,65 @@ class Football(Problem):
         return self.successor(state)[action]
 
     def goal_test(self, state):
-        ball_x = state[1][0]
-        ball_y = state[1][1]
-        return ball_x == 7 and ball_y in (2, 3)
-
-    @staticmethod
-    def euclidean_distance(pos1, pos2):
-        return math.sqrt((pos1[0] - pos2[0]) ** 2 + (pos1[1] - pos2[1]) ** 2)
+        return state[1] in self.goal_coords
 
     @staticmethod
     def check_valid(state, opponents):
         man_pos = state[0]
         ball_pos = state[1]
-
-        check_opponents = True
-
-        for opponent in opponents:
-            if abs(opponent[0] - ball_pos[0]) <= 1 and abs(opponent[1] - ball_pos[1]) <= 1:
-                check_opponents = False
-
-        return man_pos[0] >= 0 and man_pos[0] < 8 and \
-            man_pos[1] >= 0 and man_pos[1] < 6 and \
-            ball_pos[0] >= 0 and ball_pos[0] < 8 and \
-            ball_pos[1] >= 0 and ball_pos[1] < 6 and \
-            ball_pos != man_pos and check_opponents and man_pos not in opponents
+        if man_pos in opponents:
+            return False
+        for opp in opponents:
+            around = around_coords(opp)
+            # print(around)
+            if ball_pos in around:
+                return False
+        return 0 <= man_pos[0] < 8 and \
+            0 <= man_pos[1] < 6 and \
+            0 <= ball_pos[0] < 8 and \
+            0 <= ball_pos[1] < 6
 
     def successor(self, state):
         successors = dict()
+        moves_wo_ball = ["Pomesti coveche gore",
+                         "Pomesti coveche dolu",
+                         "Pomesti coveche desno",
+                         "Pomesti coveche gore-desno",
+                         "Pomesti coveche dolu-desno", ]
+        moves_w_ball = ["Turni topka gore",
+                        "Turni topka dolu",
+                        "Turni topka desno",
+                        "Turni topka gore-desno",
+                        "Turni topka dolu-desno", ]
+        move_coords = [(0, 1), (0, -1), (1, 0), (1, 1), (1, -1)]
 
         man = state[0]
         ball = state[1]
 
-        # Move Up
-        man_new = (man[0], man[1] + 1)
-        if man_new == ball:
-            ball_new = (ball[0], ball[1] + 1)
-        else:
-            ball_new = ball
-        new_state = (man_new, ball_new)
-        if self.check_valid(new_state, self.opponents):
-            if ball_new != ball:
-                successors["Turni topka gore"] = new_state
+        for w_ball, wo_ball, coord in zip(moves_w_ball, moves_wo_ball, move_coords):
+            new_man_pos = self.move_it(man, coord)
+            if new_man_pos == ball:
+                new_ball = self.move_it(new_man_pos, coord)
+                new_state = (new_man_pos, new_ball)
+                if self.check_valid(new_state, self.opponents):
+                    successors[w_ball] = new_state
             else:
-                successors["Pomesti coveche gore"] = new_state
-
-        # Move Down
-        man_new = (man[0], man[1] - 1)
-        if man_new == ball:
-            ball_new = (ball[0], ball[1] - 1)
-        else:
-            ball_new = ball
-        new_state = (man_new, ball_new)
-        if self.check_valid(new_state, self.opponents):
-            if ball_new != ball:
-                successors["Turni topka dolu"] = new_state
-            else:
-                successors["Pomesti coveche dolu"] = new_state
-
-        # Move Right
-        man_new = (man[0] + 1, man[1])
-        if man_new == ball:
-            ball_new = (ball[0] + 1, ball[1])
-        else:
-            ball_new = ball
-        new_state = (man_new, ball_new)
-        if self.check_valid(new_state, self.opponents):
-            if ball_new != ball:
-                successors["Turni topka desno"] = new_state
-            else:
-                successors["Pomesti coveche desno"] = new_state
-
-        # Move Up-Right
-        man_new = (man[0] + 1, man[1] + 1)
-        if man_new == ball:
-            ball_new = (ball[0] + 1, ball[1] + 1)
-        else:
-            ball_new = ball
-        new_state = (man_new, ball_new)
-        if self.check_valid(new_state, self.opponents):
-            if ball_new != ball:
-                successors["Turni topka gore-desno"] = new_state
-            else:
-                successors["Pomesti coveche gore-desno"] = new_state
-
-        # Move Down-Right
-        man_new = (man[0] + 1, man[1] - 1)
-        if man_new == ball:
-            ball_new = (ball[0] + 1, ball[1] - 1)
-        else:
-            ball_new = ball
-        new_state = (man_new, ball_new)
-        if self.check_valid(new_state, self.opponents):
-            if ball_new != ball:
-                successors["Turni topka dolu-desno"] = new_state
-            else:
-                successors["Pomesti coveche dolu-desno"] = new_state
-
+                new_state = (new_man_pos, ball)
+                if self.check_valid(new_state, self.opponents):
+                    successors[wo_ball] = new_state
+        # print(state, successors)
         return successors
 
+    def move_it(self, coords1, coords2):
+        return coords1[0] + coords2[0], coords1[1] + coords2[1]
+
     def h(self, node):
-        # Добивање на позициите на топката и целната позиција (голот)
-        ball_pos = node.state[1]
-        goal_pos = self.goal[1]
+        state = node.state
+        ball = state[1]
+        return min(self.euclid(ball, self.goal_coords[0]), self.euclid(ball, self.goal_coords[1]))
 
-        # Пресметување на евклидовата далечина помеѓу топката и целната позиција
-        distance = math.sqrt((goal_pos[0] - ball_pos[0]) ** 2 + (goal_pos[1] - ball_pos[1]) ** 2)
-
-        return distance
+    def euclid(self, x, y):
+        return (abs(x[0] - y[0]) + abs(x[1] - y[1])) / 2
 
 
 if __name__ == '__main__':
@@ -600,8 +561,11 @@ if __name__ == '__main__':
     ball_pos = tuple(map(int, input().split(',')))
 
     opponents = [(3, 3), (5, 4)]
-
-    football = Football((man_pos, ball_pos), opponents, ((7, 2), (7, 3)))
+    initial = (man_pos, ball_pos)
+    football = Football(initial, opponents)
 
     result = astar_search(football)
-    print(result.solution())
+    if result is not None:
+        print(result.solution())
+    else:
+        print("No solution")

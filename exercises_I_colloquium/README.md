@@ -1,4 +1,4 @@
-## Задача 1 - ghost_on_skates
+## Задача 1 - ghost_on_skates_informed
 
 Даден е лавиринт NxN во кој се движи Дух на ролери. Во лавиринтот има ѕидови кои се поставени на случајни позиции и
 истите може да се прескокнуваат. Потребно е Духот да стигне до Пакман без притоа да удри во некој ѕид или да излезе
@@ -543,7 +543,7 @@ if __name__ == '__main__':
     problem = GhostOnSkates(ghost_pos, holes, n, goal_pos)
 ````
 
-## Задача 2 - crypto_puzzle
+## Задача 2 - crypto_puzzle_csp
 
 **SEND+MORE=MONEY** е криптоаритметичка загатка, што значи дека станува збор за наоѓање цифри кои ги заменуваат буквите
 за да се направи математичкиот израз вистинит. Секоја буква во проблемот претставува една цифра (0–9). Две букви не
@@ -587,7 +587,7 @@ if __name__ == '__main__':
     print(problem.getSolution())
 ````
 
-## Задача 3 - hanoi
+## Задача 3 - hanoi_uninformed
 
 Во серија се наредени N кружни столбови со иста висина. На почетокот, на само еден од столбовите наредени се M камени
 блокови во форма на крофни со различна големина. Блоковите се наредени како кула т.н. најголемиот блок е поставен
@@ -651,7 +651,7 @@ Number of action 10
 ['MOVE TOP BLOCK FROM PILLAR 2 TO PILLAR 1', 'MOVE TOP BLOCK FROM PILLAR 2 TO PILLAR 1', 'MOVE TOP BLOCK FROM PILLAR 2 TO PILLAR 4', 'MOVE TOP BLOCK FROM PILLAR 2 TO PILLAR 4', 'MOVE TOP BLOCK FROM PILLAR 2 TO PILLAR 3', 'MOVE TOP BLOCK FROM PILLAR 2 TO PILLAR 3', 'MOVE TOP BLOCK FROM PILLAR 4 TO PILLAR 3', 'MOVE TOP BLOCK FROM PILLAR 4 TO PILLAR 3', 'MOVE TOP BLOCK FROM PILLAR 1 TO PILLAR 3', 'MOVE TOP BLOCK FROM PILLAR 1 TO PILLAR 3']
 ````
 
-## Задача 4 - timetable
+## Задача 4 - timetable_csp
 
 Потребно е да се направи распоред на часови за една група студенти. Студентите слушаат 4 предмети: Вештачка
 интелигенција (AI), Машинско учење (ML), Роботика (R) и Биоинформатика (BI). За секој предмет треба да се закажат
@@ -1570,7 +1570,7 @@ Result
 ['Pomesti kvadratche 1 levo', 'Pomesti kvadratche 1 levo', 'Pomesti kvadratche 1 levo', 'Pomesti kvadratche 1 levo', 'Pomesti kvadratche 1 gore', 'Pomesti kvadratche 1 gore', 'Pomesti kvadratche 1 gore', 'Pomesti kvadratche 1 gore']
 ````
 
-## Задача 7 - solitaire
+## Задача 7 - solitaire_uninformed
 
 Предложете соодветна репрезентација и напишете ги потребните функции во Python за да се реши следниот проблем за кој
 една можна почетна состојба е прикажана на следната слика.
@@ -1877,7 +1877,7 @@ Result
 ['Dolu Levo: (x=5,y=2)', 'Gore Levo: (x=3,y=0)', 'Desno: (x=1,y=2)', 'Desno: (x=3,y=2)', 'Gore Levo: (x=5,y=2)', 'Levo: (x=3,y=4)', 'Gore Desno: (x=1,y=4)']
 ````
 
-## Задача 8 - coloring_tiles
+## Задача 8 - coloring_tiles_uninformed
 
 Предложете соодветна репрезентација и напишете ги потребните функции во Python за да се реши следниот проблем за кој
 една можна почетна состојба е прикажана на Слика 1:

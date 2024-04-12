@@ -479,37 +479,24 @@ class Football(Problem):
         self.grid_size_y = 6
         self.opponents = opponents
 
-    def actions(self, state):
-        return self.successor(state).keys()
-
-    def result(self, state, action):
-        return self.successor(state)[action]
-
-    def goal_test(self, state):
-        ball_x = state[1][0]
-        ball_y = state[1][1]
-        return ball_x == 7 and ball_y in (2, 3)
-
-    @staticmethod
-    def euclidean_distance(pos1, pos2):
-        return math.sqrt((pos1[0] - pos2[0]) ** 2 + (pos1[1] - pos2[1]) ** 2)
-
     @staticmethod
     def check_valid(state, opponents):
         man_pos = state[0]
         ball_pos = state[1]
-
-        check_opponents = True
-
-        for opponent in opponents:
-            if abs(opponent[0] - ball_pos[0]) <= 1 and abs(opponent[1] - ball_pos[1]) <= 1:
-                check_opponents = False
-
-        return man_pos[0] >= 0 and man_pos[0] < 8 and \
-            man_pos[1] >= 0 and man_pos[1] < 6 and \
-            ball_pos[0] >= 0 and ball_pos[0] < 8 and \
-            ball_pos[1] >= 0 and ball_pos[1] < 6 and \
-            ball_pos != man_pos and check_opponents and man_pos not in opponents
+        if man_pos[0] < 0 or man_pos[0] >= 8 or man_pos[1] < 0 or man_pos[1] >= 6:
+            return False
+        if ball_pos[0] < 0 or ball_pos[0] >= 8 or ball_pos[1] < 0 or ball_pos[1] >= 6:
+            return False
+        if man_pos == ball_pos:
+            return False
+        for opp_pos in opponents:
+            if opp_pos[0] == ball_pos[0] and abs(opp_pos[1] - ball_pos[1]) <= 1:
+                return False
+            if opp_pos[1] == ball_pos[1] and abs(opp_pos[0] - ball_pos[0]) <= 1:
+                return False
+            if opp_pos == man_pos or opp_pos == ball_pos:
+                return False
+        return True
 
     def successor(self, state):
         successors = dict()
@@ -517,7 +504,7 @@ class Football(Problem):
         man = state[0]
         ball = state[1]
 
-        # Move Up
+        # Up
         man_new = (man[0], man[1] + 1)
         if man_new == ball:
             ball_new = (ball[0], ball[1] + 1)
@@ -530,7 +517,7 @@ class Football(Problem):
             else:
                 successors["Pomesti coveche gore"] = new_state
 
-        # Move Down
+        # Down
         man_new = (man[0], man[1] - 1)
         if man_new == ball:
             ball_new = (ball[0], ball[1] - 1)
@@ -543,7 +530,7 @@ class Football(Problem):
             else:
                 successors["Pomesti coveche dolu"] = new_state
 
-        # Move Right
+        # Right
         man_new = (man[0] + 1, man[1])
         if man_new == ball:
             ball_new = (ball[0] + 1, ball[1])
@@ -556,7 +543,7 @@ class Football(Problem):
             else:
                 successors["Pomesti coveche desno"] = new_state
 
-        # Move Up-Right
+        # Up-right
         man_new = (man[0] + 1, man[1] + 1)
         if man_new == ball:
             ball_new = (ball[0] + 1, ball[1] + 1)
@@ -569,7 +556,7 @@ class Football(Problem):
             else:
                 successors["Pomesti coveche gore-desno"] = new_state
 
-        # Move Down-Right
+        # Down-right
         man_new = (man[0] + 1, man[1] - 1)
         if man_new == ball:
             ball_new = (ball[0] + 1, ball[1] - 1)
@@ -585,14 +572,25 @@ class Football(Problem):
         return successors
 
     def h(self, node):
-        # Добивање на позициите на топката и целната позиција (голот)
-        ball_pos = node.state[1]
-        goal_pos = self.goal[1]
+        state = node.state
+        goal = self.goal
+        value = 0
+        for x, y in zip(state, goal):
+            if x != y:
+                value += 1
+        return value
 
-        # Пресметување на евклидовата далечина помеѓу топката и целната позиција
-        distance = math.sqrt((goal_pos[0] - ball_pos[0]) ** 2 + (goal_pos[1] - ball_pos[1]) ** 2)
+    def actions(self, state):
+        return self.successor(state).keys()
 
-        return distance
+    def result(self, state, action):
+        return self.successor(state)[action]
+
+    def goal_test(self, state):
+        ball_x = state[1][0]
+        ball_y = state[1][1]
+        # we check if the ball is in the goal
+        return ball_x == 7 and ball_y in (2, 3)
 
 
 if __name__ == '__main__':
@@ -601,7 +599,8 @@ if __name__ == '__main__':
 
     opponents = [(3, 3), (5, 4)]
 
+    # man_pos = state[0][0], ball_pos = state[1][0], opponents = state[1]
     football = Football((man_pos, ball_pos), opponents, ((7, 2), (7, 3)))
 
-    result = astar_search(football)
-    print(result.solution())
+    answer = astar_search(football)
+    print(answer.solution())
