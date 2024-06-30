@@ -55,8 +55,8 @@ if __name__ == '__main__':
             max_weight = calculated_weight
             max_result = solution
 
-    # print(max_result)
-    # print(max_weight)
+    # # print(max_result)
+    # # print(max_weight)
     print(f'Total score: {max_weight}')
     print(f'Team leader: {max_result[6][1]}')
     print(f'Participant 1: {max_result[1][1]}')

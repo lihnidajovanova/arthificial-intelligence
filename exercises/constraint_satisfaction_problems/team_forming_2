@@ -47,7 +47,7 @@ if __name__ == '__main__':
     # Solve problem
     solutions = problem.getSolutions()
 
-    # Find optimal solution
+    # # Find optimal solution
     solutions = sorted(solutions, key=lambda x: (sum([v[0] for v in x.values()]), -x['leader'][0]), reverse=True)
     optimal_solution = solutions[0]
     max_score = sum([v[0] for v in optimal_solution.values()])
