@@ -28,7 +28,7 @@ def suma_kolokviumi(rezultati):
 
 if __name__ == "__main__":
     n = int(input())
-    rezultati = []  # ova e listata od rechnici
+    results = []  # ova e listata od rechnici
     for i in range(0, n):
         r = {}  # rechnik koj kje chuva podatoci za eden student
         brojIndeks = input()
@@ -38,6 +38,6 @@ if __name__ == "__main__":
         r["Predmet"] = "Veshtachka inteligencija"
         r["Kolokvium 1"] = brojPoeni1
         r["Kolokvium 2"] = brojPoeni2
-        rezultati.append(r)
+        results.append(r)
 
-    print(suma_kolokviumi(rezultati))
+    print(suma_kolokviumi(results))

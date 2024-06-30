@@ -54,18 +54,18 @@ if __name__ == '__main__':
     y = [float(row[-1]) for row in dataset]
     n = 0.85
 
-    x_train = x[:int(len(x) * n)]
-    x_test = x[int(len(x) * n):]
+    train_x = x[:int(len(x) * n)]
+    test_x = x[int(len(x) * n):]
 
-    y_train = y[:int(len(y) * n)]
-    y_test = y[int(len(y) * n):]
+    train_y = y[:int(len(y) * n)]
+    test_y = y[int(len(y) * n):]
 
     nb_clf = GaussianNB()
-    nb_clf.fit(x_train, y_train)
+    nb_clf.fit(train_x, train_y)
 
     entry = [list(map(float, input().split(" ")))]
 
-    print(nb_clf.score(x_test, y_test))
+    print(nb_clf.score(test_x, test_y))
 
     prediction = int(nb_clf.predict(entry)[0])
     print(prediction)
