@@ -1,5 +1,6 @@
 from constraint import *
 
+
 if __name__ == '__main__':
     # Read input data
     n1 = int(input())

@@ -1,6 +1,5 @@
 from constraint import *
 
-
 def all_diff(m1, m2):
     if m1[1] != m2[1] and m1[0] != m2[0]:
         return True
