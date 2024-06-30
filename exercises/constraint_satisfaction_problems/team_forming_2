@@ -1,0 +1,58 @@
+from constraint import *
+
+if __name__ == '__main__':
+    # Read input data
+    n1 = int(input())
+    members = []
+    for i in range(n1):
+        weight, name = input().split()
+        members.append((float(weight), name))
+
+    n2 = int(input())
+    team_leaders = []
+    for i in range(n2):
+        weight, name = input().split()
+        team_leaders.append((float(weight), name))
+
+    # Define problem
+    problem = Problem()
+
+    # Add variables
+    problem.addVariable('leader', team_leaders)
+    problem.addVariables(['member{}'.format(i + 1) for i in range(5)], members)
+
+
+    # Add constraints
+    def total_weight(leader, *members):
+        weight = leader[0]  # Add leader's weight only once
+        weight += sum([m[0] for m in members])
+        return weight <= 100
+
+
+    problem.addConstraint(total_weight, ['leader', 'member1', 'member2', 'member3', 'member4', 'member5'])
+
+
+    def unique_participants(leader, *members):
+        participants = [leader]
+        for member in members:
+            if member[1] in [p[1] for p in participants]:
+                return False
+            participants.append(member)
+        return True
+
+
+    problem.addConstraint(unique_participants, ['leader', 'member1', 'member2', 'member3', 'member4', 'member5'])
+
+    # Solve problem
+    solutions = problem.getSolutions()
+
+    # Find optimal solution
+    solutions = sorted(solutions, key=lambda x: (sum([v[0] for v in x.values()]), -x['leader'][0]), reverse=True)
+    optimal_solution = solutions[0]
+    max_score = sum([v[0] for v in optimal_solution.values()])
+
+    # Print results
+    print(f"Total score: {max_score:.1f}")
+    print(f"Team leader: {optimal_solution['leader'][1]}")
+    for i in range(5):
+        print(f"Participant {i + 1}: {optimal_solution['member' + str(i + 1)][1]}")
