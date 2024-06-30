@@ -565,7 +565,50 @@ Accuracy: 1.0
 Precision: 0.0
 ````
 
-## Задача 7 -
+## Задача 7 - solar_flare_
+
+Дадено е податочно множество за класификација на соларни сигнали, кое се состои од 15 карактеристики и две класи.
+
+Потребно е да направите 3 модели на класификација:
+
+* Наивен баесов класификатор.
+
+* Класификатор со колекција од 50 дрва на одлука со ентропија како критериум за избор на најдобар атрибут за поделба.
+
+* Невронска мрежа со 50 неврони, ReLU активациска функција, 0.001 рата на учење.
+
+Од стандарден влез прво се чита критериум (mode) за поделба на подмножества за тренирање и тестирање, а потоа и
+процент (split) за поделба. Ако критериумот за поделба е "balanced" тогаш потребно е да го поделите податочното
+множество така што за тренирање ќе ги користите првите split% од секоја класа, а останатите за тестирање. Во спротивно,
+ако критериумот за поделба не е "balanced" тогаш потребно е да го поделите податочното множество така што за тренирање
+ќе ги користите првите split% од множеството, а останатите за тестирање.
+
+Да се испечати точноста на моделот кој има највисока прецизност.
+
+прецизност = TP / (TP + FP)
+
+одзив = TP / (TP + FN)
+
+TP - број на точно предвидени позитивни класи
+
+FP - број на грешно предвидени позитивни класи
+
+TN - број на точно предвидени негативни класи
+
+FN - број на грешно предвидени негативни класи
+
+````
+For example:
+Input
+balanced
+50
+
+Result
+Najvisoka preciznost ima prviot klasifikator
+Negovata tochnost e: 0.47619047619047616
+----------
+
+````
 
 ## Задача 8 - solar_flare_cross_validation_nbc_vs_nn_mlpc.py
 
@@ -688,7 +731,123 @@ Tochnost so otstraneta kolona: 0.8269230769230769
 
 ## Задача 13 -
 
-## Задача 14 -
+## Задача 14 - glass_type_dtc.py
+
+Дадено е податочно множество за класификација на тип на стакло. Податочното множество содржи 9 атрибути кои го
+претставуваат хемискиот состав на стаклото (силикон, калиум, калциум, алуминиум, железо, итн.). Класниот атрибут го
+претставува типот на стакло и има 7 вредности.
+
+Податочното множество поделете го на подмножества за тренирање и тестирање така што првите N примероци ќе се користат за
+тестирање, а останатите за тренирање. Со помош на класификатор - дрво на одлука со најмногу L листови одредете го
+најважниот атрибут и отстранете го. Потоа скалирајте ги атрибутите со StandardScaler.
+
+Потребно е да проверите како скалирањето на податоци влијае врз класификацијата на типот на стакло доколку се отстрани
+најважниот атрибут. Направете класификатор - колекција од D дрва на одлука кои користат gini како критериум за избор на
+најдобар атрибут за поделба. Тренирајте го класификаторот со оригиналното податочно множество и со множеството од кое е
+отстранет најважниот атрибут, а останатите атрибути се скалирани. Потоа пресметајте ја точноста која се добива со
+множеството за тестирање.
+
+Од стандарден влез прво се чита вредноста N za бројот на примероци во множеството за тестирање. Потоа се читаат
+вредноста L за максималниот број на листови и вредноста D за бројот на дрва на одлука.
+
+На стандарден излез да се испечати точноста добиена со двата класификатори. Потоа да се испечати како скалирањето на
+атрибути влијае врз точноста („Skaliranjeto na atributi ja podobruva tochnosta“, „Skaliranjeto na atributi ne ja
+podobruva tochnosta“, или „Skaliranjeto na atributi nema vlijanie“).
+
+За да ги добиете истите резултати како и во тест примерите, при креирање на класификаторите поставете random_state=0.
+
+````
+For example:
+Input
+100
+50
+70
+
+Result
+Tochnost so originalnoto podatochno mnozestvo: 0.66
+Tochnost so skalirani atributi: 0.68
+Skaliranjeto na atributi ja podobruva tochnosta
+----------
+Input
+200
+50
+70
+
+Result
+Tochnost so originalnoto podatochno mnozestvo: 0.5
+Tochnost so skalirani atributi: 0.525
+Skaliranjeto na atributi ja podobruva tochnosta
+----------
+Input
+100
+20
+70
+
+Result
+Tochnost so originalnoto podatochno mnozestvo: 0.66
+Tochnost so skalirani atributi: 0.68
+Skaliranjeto na atributi ja podobruva tochnosta
+----------
+Input
+200
+20
+70
+
+Result
+Tochnost so originalnoto podatochno mnozestvo: 0.5
+Tochnost so skalirani atributi: 0.525
+Skaliranjeto na atributi ja podobruva tochnosta
+----------
+Input
+100
+50
+5
+
+Result
+Tochnost so originalnoto podatochno mnozestvo: 0.69
+Tochnost so skalirani atributi: 0.58
+Skaliranjeto na atributi ne ja podobruva tochnosta
+----------
+Input
+200
+50
+50
+
+Result
+Tochnost so originalnoto podatochno mnozestvo: 0.495
+Tochnost so skalirani atributi: 0.515
+Skaliranjeto na atributi ja podobruva tochnosta
+----------
+Input
+200
+20
+10
+
+Result
+Tochnost so originalnoto podatochno mnozestvo: 0.46
+Tochnost so skalirani atributi: 0.435
+Skaliranjeto na atributi ne ja podobruva tochnosta
+----------
+Input
+100
+5
+150
+
+Result
+Tochnost so originalnoto podatochno mnozestvo: 0.66
+Tochnost so skalirani atributi: 0.67
+Skaliranjeto na atributi ja podobruva tochnosta
+----------
+Input
+5
+5
+5
+
+Result
+Tochnost so originalnoto podatochno mnozestvo: 0.8
+Tochnost so skalirani atributi: 0.8
+Skaliranjeto na atributi nema vlijanie
+````
 
 ## Задача 15 -
 
