@@ -1,7 +1,8 @@
 # from sklearn import DecisionTreeClassifier, GaussianNB, MLPClassifier
-from sklearn.naive_bayes import GaussianNB
-from sklearn.tree import DecisionTreeClassifier
+import warnings
 from sklearn.neural_network import MLPClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.naive_bayes import GaussianNB
 
 dataset = [
     [0.0307, 0.0523, 0.0653, 0.0521, 0.0611, 0.0577, 0.0665, 0.0664, 0.146, 0.2792, 0.3877, 0.4992, 0.4981, 0.4972,
@@ -410,79 +411,74 @@ dataset = [
      0.5364, 1]]
 
 
-def split_set(set):
+def split_xy(set):
     return [row[:-1] for row in set], [row[-1] for row in set]
 
 
-def split_set_removed_col(set, col):
+def split_xy_removed_col(set, col):
     new_set = [[row[i] for i in range(0, len(row)) if i != col] for row in set]
-    return split_set(new_set)
+    return split_xy(new_set)
 
 
-def accuracy_calculation(predictions, test_y):
+def calculate_accuracy(prediction, test_y):
     accuracy = 0
-    for pred, actual in zip(predictions, test_y):
+    for pred, actual in zip(prediction, test_y):
         if pred == actual:
             accuracy += 1
 
     tp, fp = 0, 0
-    for pred, actual in zip(predictions, test_y):
+    for pred, actual in zip(prediction, test_y):
         if actual == 1:
             if pred == actual:
                 tp += 1
         else:
             if pred != actual:
                 fp += 1
+
     return accuracy / len(test_y), tp / (tp + fp)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     x = int(input())
-    clf_type = input()
-    col = int(input())
+    clf = input()
+    column = int(input())
 
     train_set = dataset[x:]
     test_set = dataset[:x]
 
-    train_x, train_y = split_set(train_set)
-    test_x, test_y = split_set(test_set)
+    train_x, train_y = split_xy(train_set)
+    test_x, test_y = split_xy(test_set)
 
-    train_x_1, train_y_1 = split_set_removed_col(train_set, col)
-    test_x_1, test_y_1 = split_set_removed_col(test_set, col)
+    train_xr, train_yr = split_xy_removed_col(train_set, column)
+    test_xr, test_yr = split_xy_removed_col(test_set, column)
 
-    clf_1 = None
-    clf_2 = None
-    if clf_type == "NB":
-        # print("NB")
-        clf_1 = GaussianNB()
-        clf_2 = GaussianNB()
-    elif clf_type == "DT":
-        # print("DT")
-        clf_1 = DecisionTreeClassifier(random_state=0)
-        clf_2 = DecisionTreeClassifier(random_state=0)
+    clf1 = None
+    clf2 = None
+
+    if clf == "NB":
+        clf1 = GaussianNB()
+        clf2 = GaussianNB()
+    elif clf == "DT":
+        clf1 = DecisionTreeClassifier(random_state=0)
+        clf2 = DecisionTreeClassifier(random_state=0)
     else:
-        # print("MLP")
-        clf_1 = MLPClassifier(hidden_layer_sizes=3,
-                              activation='relu',
-                              learning_rate_init=0.003,
-                              max_iter=200, random_state=0)
-        clf_2 = MLPClassifier(hidden_layer_sizes=3,
-                              activation='relu',
-                              learning_rate_init=0.003,
-                              max_iter=200, random_state=0)
+        clf1 = MLPClassifier(hidden_layer_sizes=3, activation="relu", learning_rate_init=0.003, max_iter=200,
+                             random_state=0)
+        clf2 = MLPClassifier(hidden_layer_sizes=3, activation="relu", learning_rate_init=0.003, max_iter=200,
+                             random_state=0)
 
-    clf_1.fit(train_x, train_y)
-    clf_2.fit(train_x_1, train_y_1)
+    clf1.fit(train_x, train_y)
+    clf2.fit(train_xr, train_yr)
 
-    accuracy_1, precision_1 = accuracy_calculation(clf_1.predict(test_x), test_y)
-    accuracy_2, precision_2 = accuracy_calculation(clf_2.predict(test_x_1), test_y_1)
+    accuracy, precision = calculate_accuracy(clf1.predict(test_x), test_y)
+    accuracy_r, precision_r = calculate_accuracy(clf2.predict(test_xr), test_yr)
 
-    if accuracy_1 > accuracy_2:
+    if accuracy > accuracy_r:
         print("Klasifiktorot so site koloni ima pogolema tochnost")
-        print(precision_1)
-    elif accuracy_1 < accuracy_2:
+        print(precision)
+    elif accuracy < accuracy_r:
         print("Klasifiktorot so edna kolona pomalku ima pogolema tochnost")
-        print(precision_2)
+        print(precision_r)
     else:
         print("Klasifikatorite imaat ista tochnost")
-        print(precision_1)
+        print(precision)
