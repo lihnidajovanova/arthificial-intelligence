@@ -428,40 +428,43 @@ data = [[0.02, 0.0371, 0.0428, 0.0207, 0.0954, 0.0986, 0.1539, 0.1601, 0.3109, 0
          0.1302, 1]]
 
 
-def generate_classifier(clf_name):
-    if clf_name == "NB":
+def generate_classifier(c_name):
+    if c_name == "NB":
         return GaussianNB()
-    elif clf_name == "RF":
-        return RandomForestClassifier(n_estimators=50, criterion="entropy", random_state=0)
+    elif c_name == "RF":
+        return RandomForestClassifier(random_state=0,
+                                      n_estimators=50,
+                                      criterion='entropy')
     else:
-        return MLPClassifier(hidden_layer_sizes=50, activation="relu", learning_rate_init=0.001, random_state=0)
+        return MLPClassifier(random_state=0,
+                             hidden_layer_sizes=50,
+                             activation='relu',
+                             learning_rate_init=0.001)
 
 
-def index(i, set):
+def idx(i, set):
     return int(i * len(set))
 
 
-def split_set(set):
+def split_x_y(set):
     return [row[:-1] for row in set], [row[-1] for row in set]
 
 
 def split_dataset(mode, split, dataset):
-    train_set = None
     test_set = None
-
+    train_set = None
     if mode == "balanced":
         set_0 = [row for row in dataset if row[-1] == 0]
         set_1 = [row for row in dataset if row[-1] == 1]
-        train_set = set_0[:index(split, set_0)] + set_1[:index(split, set_1)]
-        test_set = set_0[index(split, set_0):] + set_1[index(split, set_1):]
+        train_set = set_0[:idx(split, set_0)] + set_1[:idx(split, set_1)]
+        test_set = set_0[idx(split, set_0):] + set_1[idx(split, set_1):]
     else:
-        train_set = dataset[:index(split, dataset)]
-        test_set = dataset[index(split, dataset):]
+        train_set = dataset[:idx(split, dataset)]
+        test_set = dataset[idx(split, dataset):]
 
-    train_x, train_y = split_set(train_set)
-    test_x, test_y = split_set(test_set)
-
-    return train_x, train_y, test_x, test_y
+    train_X, train_Y = split_x_y(train_set)
+    test_X, test_Y = split_x_y(test_set)
+    return train_X, train_Y, test_X, test_Y
 
 
 if __name__ == '__main__':
@@ -473,19 +476,16 @@ if __name__ == '__main__':
     max_precision = -1
     accuracy_for_max_precision = 0
     max_i = -1
-
     for i, c in enumerate(["NB", "RF", "MLP"]):
         classifier = generate_classifier(c)
-        train_x, train_y, test_x, test_y = split_dataset(mode, split, dataset)
-        classifier.fit(train_x, train_y)
-        precision = precision_score(test_y, classifier.predict(test_x), zero_division=0)
-        print(precision)
-
+        train_X, train_Y, test_X, test_Y = split_dataset(mode, split, dataset)
+        classifier.fit(train_X, train_Y)
+        precision = precision_score(test_Y, classifier.predict(test_X), zero_division=0)
+        # print(precision)
         if precision > max_precision:
             max_precision = precision
-            accuracy_for_max_precision - accuracy_score(test_y, classifier.predict(test_x))
+            accuracy_for_max_precision = accuracy_score(test_Y, classifier.predict(test_X))
             max_i = i
-
     dic = ["prviot", "vtoriot", "tretiot"]
     print(f"Najvisoka preciznost ima {dic[max_i]} klasifikator")
     print(f"Negovata tochnost e: {accuracy_for_max_precision}")
