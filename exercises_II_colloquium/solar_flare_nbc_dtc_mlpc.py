@@ -4,8 +4,7 @@ os.environ['OPENBLAS_NUM_THREADS'] = '1'
 
 import warnings
 from sklearn.exceptions import ConvergenceWarning
-from sklearn.naive_bayes import CategoricalNB, GaussianNB
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import *
